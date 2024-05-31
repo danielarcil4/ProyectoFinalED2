@@ -4,14 +4,6 @@
  *
  * Detailed description of the main asm file.
  */
-.extern uart_printMsgLED_asm
-.extern gpio_init_asm
-.extern gpio_set_dir_asm
-.extern gpio_put_asm
-.extern delay_asm
-.extern adc_init_asm
-.extern requestDataAdc
-.extern uart_printValueAdc_asm 
 
 .global mainasm              // To be called from another file
 .equ DELAY, 0x1523A96
@@ -21,6 +13,7 @@ mainasm:
     bl setFunctionGPIO
     bl configurePadControl
     bl EnableAdc
+    bl configClk
     loop:
         bl requestDataAdc
         bl uart_printValueAdc_asm

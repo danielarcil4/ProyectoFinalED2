@@ -23,5 +23,6 @@ int main() {
     stdio_init_all();
 	
 	mainasm();
-	
+
+	return 0;
 }

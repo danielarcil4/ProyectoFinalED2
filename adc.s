@@ -80,5 +80,17 @@ requestDataAdc:
         AND R1,R1,R2
         beq DATAISREADY
     TAKEDATA:
-        LDR R0, [R0,#ADC_DATARESULT_OFFSET]    // Read DATA READY
+        LDR R1, [R0,#ADC_DATARESULT_OFFSET]    // Read DATA READY
         bx lr
+
+.global configClk
+.equ BASE_ADC, 0x4004c000
+.equ CLK_INT, 100000
+.equ CLK_OFFSET, 16
+configClk:
+    LDR R0,=(BASE_ADC+CLK_OFFSET)
+    LDR R1,=CLK_INT
+    LSL R1,R1,#8
+    STR R1,[R0]
+    bx lr
+
