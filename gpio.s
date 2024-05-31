@@ -52,9 +52,10 @@ rstiobank0done:
  * Parameters:
  *  R0: GPIO_NUM
  */
+ .global setFunctionGPIO
 .equ    IO_BANK0_BASE, 0x40014000       // See RP2040 datasheet: 2.19.6 (GPIO)
 .equ    GPIO0_CTRL_OFFSET, 4
-.equ    GPIO_SIO_FUNCTION, 5
+.equ    GPIO_SIO_FUNCTION, 31
 setFunctionGPIO:
 	ldr r2, =(IO_BANK0_BASE+GPIO0_CTRL_OFFSET)  // Address for GPIO0_CTRL register
 	mov r1, #GPIO_SIO_FUNCTION          // Select SIO for GPIO. See RP2040 datasheet: 2.19.2
@@ -75,7 +76,7 @@ setFunctionGPIO:
 .equ    GPIO_OE_OFFSET,        32
 .equ    GPIO_OE_SET_OFFSET,    4
 .equ    GPIO_OE_CLR_OFFSET,    8
-gpio_set_dir_asm:  //00001000000000000
+gpio_set_dir_asm:  
 	mov r2, #1			                // load a '1' to be shifted GPIO_NUM places
 	lsl r2, r2, r0 	                    // shift the bit over to align with GPIO_NUM
 	ldr r0, =(SIO_BASE+GPIO_OE_OFFSET)  // Address for GPIO_OE register

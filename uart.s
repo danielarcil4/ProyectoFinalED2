@@ -47,9 +47,20 @@ _uart_printMsgLED_asm:
 */
 .global uart_printValueAdc_asm
 uart_text_ADCstatus:        .string "ADC value is %s\n"
+prueba:     .string "1"
+prueba2:     .string "1"
 .align 2
 uart_printValueAdc_asm:
     push    {lr}
-    ldr     r1, =uart_text_LEDstatus        // Prepare argument no. 1 with full text
-    bl      __wrap_printf                   // Call printf wrapper function
-    pop {pc} 
+    MOV R1,R0
+    cmp r1,#255
+    ble isEqual
+    notEqual:
+        #ldr R1,=prueba
+        b finPrueba
+    isEqual:
+        #ldr R1,=prueba
+    finPrueba:
+        ldr R0, =uart_text_ADCstatus        // Prepare argument no. 1 with full text
+        bl  __wrap_printf                   // Call printf wrapper function
+        pop {pc} 
