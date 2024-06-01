@@ -18,10 +18,10 @@
  */
 .global gpio_init_asm                   // To allow this function to be called from another file
 gpio_init_asm:
-        push {r0, lr}
+        push {r0, r1, lr}
         bl releaseResetIOBank0
-        pop {r0}
-        bl setFunctionGPIO
+        pop {r0, r1}
+        bl gpio_set_function
         pop {pc}
 
 /**
@@ -46,18 +46,19 @@ rstiobank0done:
     bx  lr
 
 /**
- * @brief setFunctionGPIO.
+ * @brief gpio_set_function.
  *
  * This function selects function SIO for GPIOx
  * Parameters:
  *  R0: GPIO_NUM
  */
+.global gpio_set_function
 .equ    IO_BANK0_BASE, 0x40014000       // See RP2040 datasheet: 2.19.6 (GPIO)
 .equ    GPIO0_CTRL_OFFSET, 4
-.equ    GPIO_SIO_FUNCTION, 5
-setFunctionGPIO:
+//.equ    GPIO_SIO_FUNCTION, 5
+gpio_set_function:
 	ldr r2, =(IO_BANK0_BASE+GPIO0_CTRL_OFFSET)  // Address for GPIO0_CTRL register
-	mov r1, #GPIO_SIO_FUNCTION          // Select SIO for GPIO. See RP2040 datasheet: 2.19.2
+	//mov r1, #GPIO_SIO_FUNCTION          // Select SIO for GPIO. See RP2040 datasheet: 2.19.2
     lsl r0, r0, #3                      // Prepare register offset for GPIOx (GPIO_NUM * 8)
 	str r1, [r2, r0]	                // Store selected function (SIO) in GPIOx control register
     bx  lr
@@ -75,7 +76,7 @@ setFunctionGPIO:
 .equ    GPIO_OE_OFFSET,        32
 .equ    GPIO_OE_SET_OFFSET,    4
 .equ    GPIO_OE_CLR_OFFSET,    8
-gpio_set_dir_asm:  //00001000000000000
+gpio_set_dir_asm:  
 	mov r2, #1			                // load a '1' to be shifted GPIO_NUM places
 	lsl r2, r2, r0 	                    // shift the bit over to align with GPIO_NUM
 	ldr r0, =(SIO_BASE+GPIO_OE_OFFSET)  // Address for GPIO_OE register
