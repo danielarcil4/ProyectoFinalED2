@@ -23,15 +23,67 @@ rstAdcdone:
 	mov r2, #ADC_BITMASK                 // Load a '1' into bit 5: IO_Bank0
 	and r1, r1, r2		                // Check bit IO_Bank0 (0: reset has not been released yet)
 	beq rstAdcdone
-    bx  lr   
-
-.equ BASE_ADC, 0x4004c000
-.equ    ENABLE_BITMASK,  4104  //activar puerto del adc mas START_MANY
+    bx  lr
+/**
+ * @brief EnableAdc.
+ *
+ * Activar AINSEL (mux) y ENABLE 
+ */
+//.global EnableAdc => Poner global si se llama desde afuera
+.equ    BASE_ADC, 0x4004c000
+.equ    AINSEL_BITMASK,  4096  //Activar AINSEL adc (bit 12)
+.equ    ENABLE_BITMASK,  1 //Activar adc
 EnableAdc:
-    LDR R0,=(BASE_ADC+ATOMIC_SET)
-    LDR R1,=ENABLE_BITMASK
-    STR R1,[R0]
+    LDR R0, =(BASE_ADC + ATOMIC_SET)
+    LDR R1, =AINSEL_BITMASK
+    STR R1, [R0]    //Habilita MUX para lectura de multiples entradas
+
+    LDR R0, =(BASE_ADC + ATOMIC_SET)
+    LDR R1, =ENABLE_BITMASK
+    STR R1, [R0] //Habilita Enable de ADC
     bx lr
+
+/**
+ * @brief adc_gpio_init.
+ *
+ * This function selects function SIO for GPIOx
+ * Parameters:
+ *  R0: GPIO_NUM Valor entre 26 y 29
+ */
+ .global adc_gpio_init
+.equ    IO_BANK0_BASE, 0x40014000       // See RP2040 datasheet: 2.19.6 (GPIO)
+.equ    GPIO0_CTRL_OFFSET, 4
+.equ    GPIO_FUNC_NULL, 31
+adc_gpio_init:
+	ldr r2, =(IO_BANK0_BASE+GPIO0_CTRL_OFFSET)  // Address for GPIO0_CTRL register
+	mov r1, #GPIO_FUNC_NULL          // Select SIO for GPIO. See RP2040 datasheet: 2.19.2
+    lsl r0, r0, #3                      // Prepare register offset for GPIOx (GPIO_NUM * 8)
+	str r1, [r2, r0]	                // Store selected function (SIO) in GPIOx control register
+    // bx  lr
+/**
+ * @brief configurePadControl.
+ *
+ */
+//.global configurePadControl
+.equ BASE_PAD_CONTROL, 0x4001c000
+.equ ADC_OFFSET, 0x6c
+.equ OD_BITMASK, 128
+.equ IE_BITMASK, 64
+.equ PULLUP_BITMASK, 8
+configurePadControl:    
+    LDR R0,=(BASE_PAD_CONTROL+ADC_OFFSET+ATOMIC_SET)
+    LDR R2,=(OD_BITMASK)
+    STR R2,[R0]
+    
+    LDR R0,=(BASE_PAD_CONTROL+ADC_OFFSET+ATOMIC_CLR)
+    LDR R2,=(IE_BITMASK)
+    STR R2,[R0]
+
+    LDR R0,=(BASE_PAD_CONTROL+ADC_OFFSET+ATOMIC_SET)
+    LDR R2,=(PULLUP_BITMASK)
+    STR R2,[R0]
+    bx lr
+
 
 /*
 *This funtion return value in R0
@@ -39,15 +91,31 @@ EnableAdc:
 
 .global requestDataAdc
 .equ BASE_ADC, 0x4004c000
-.equ    ADC_ENABLE_BITMASK, 256
+.equ    ADC_READY_BITMASK, 256
 .equ    ADC_DATARESULT_OFFSET, 4
+.equ    ONE_SHOT_BITMASK,  4 //activar adc
 requestDataAdc:
+    LDR R0,=(BASE_ADC+ATOMIC_SET)
+    LDR R1,=ONE_SHOT_BITMASK
+    STR R1,[R0]
+
     LDR R0,=(BASE_ADC)
     DATAISREADY:
         LDR R1, [R0]   
-        LDR R2,=ADC_ENABLE_BITMASK
+        LDR R2,=ADC_READY_BITMASK
         AND R1,R1,R2
         beq DATAISREADY
     TAKEDATA:
-        LDR R0, [R0,#ADC_DATARESULT_OFFSET]    // Read reset done register
+        LDR R1, [R0,#ADC_DATARESULT_OFFSET]    // Read DATA READY
         bx lr
+
+.global configClk
+.equ BASE_ADC, 0x4004c000
+.equ CLK_INT, 100000
+.equ CLK_OFFSET, 16
+configClk:
+    LDR R0,=(BASE_ADC+CLK_OFFSET)
+    LDR R1,=CLK_INT
+    LSL R1,R1,#8
+    STR R1,[R0]
+    bx lr
