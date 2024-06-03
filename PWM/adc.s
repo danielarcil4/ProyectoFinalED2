@@ -4,7 +4,7 @@
 .equ    ATOMIC_CLR, 0x3000
 
 .global adc_init_asm                   // To allow this function to be called from another file
-adc_init_asm:
+adc_init_asm:                      // Function to initialize the ADC
         push {lr}
         bl releaseResetAdc
         bl EnableAdc        
