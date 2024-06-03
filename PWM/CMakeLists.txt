@@ -18,10 +18,11 @@ add_executable(my_DE2_Project
     gpio.s
     uart.s
     adc.s
+    pwm.s
 )
 
 # pico_stdlib library. You can add more if they are needed
-target_link_libraries(my_DE2_Project pico_stdlib)
+target_link_libraries(my_DE2_Project pico_stdlib hardware_pwm)
 
 # Enable usb output, disable uart output
 pico_enable_stdio_usb(my_DE2_Project 1)

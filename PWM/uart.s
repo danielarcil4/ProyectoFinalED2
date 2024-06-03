@@ -43,7 +43,8 @@ _uart_printMsgLED_asm:
     pop {pc}                                // Return from subroutine
 /*
 *Parameters:
-*  R0: ADC_value
+*  
+*  R1: ADC_value
 */
 .global uart_printValueAdc_asm
 uart_text_ADCstatus:  .string "ADC value is %d\n"

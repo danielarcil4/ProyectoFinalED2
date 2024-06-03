@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "main.h"
-
+#include "hardware/pwm.h"
 // Include your own header files here
 
 /**

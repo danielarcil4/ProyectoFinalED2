@@ -52,10 +52,14 @@ rstiobank0done:
  * Parameters:
  *  R0: GPIO_NUM
  */
+<<<<<<< HEAD:ADC/gpio.s
 //.global setFunctionGPIO
+=======
+ .global setFunctionGPIO
+>>>>>>> a2ee552ddd7841bdc257d1e7cb3072ed7067b88e:gpio.s
 .equ    IO_BANK0_BASE, 0x40014000       // See RP2040 datasheet: 2.19.6 (GPIO)
 .equ    GPIO0_CTRL_OFFSET, 4
-.equ    GPIO_SIO_FUNCTION, 5
+.equ    GPIO_SIO_FUNCTION, 31
 setFunctionGPIO:
 	ldr r2, =(IO_BANK0_BASE+GPIO0_CTRL_OFFSET)  // Address for GPIO0_CTRL register
 	mov r1, #GPIO_SIO_FUNCTION          // Select SIO for GPIO. See RP2040 datasheet: 2.19.2

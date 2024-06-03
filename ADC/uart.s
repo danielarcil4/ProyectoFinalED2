@@ -46,10 +46,10 @@ _uart_printMsgLED_asm:
 *  R0: ADC_value
 */
 .global uart_printValueAdc_asm
-uart_text_ADCstatus:        .string "ADC value is %s\n"
+uart_text_ADCstatus:  .string "ADC value is %d\n"
 .align 2
 uart_printValueAdc_asm:
     push    {lr}
-    ldr     r1, =uart_text_LEDstatus        // Prepare argument no. 1 with full text
-    bl      __wrap_printf                   // Call printf wrapper function
+    ldr R0, =uart_text_ADCstatus        // Prepare argument no. 1 with full text
+    bl  __wrap_printf                   // Call printf wrapper function
     pop {pc} 
