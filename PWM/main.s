@@ -13,7 +13,7 @@
 mainasm:
     /* ADC Initialize */
     bl      adc_init_asm
-    mov     r0, #ADC_GPIO_CH0    
+    mov     r0,#ADC_GPIO_CH0    
     bl      adc_gpio_init
     
     /*PWM Initialize*/

@@ -6,15 +6,10 @@
 .equ    PWM_TOP_VALUE,       4095
 .equ    PWM_DUTY_ZERO,       0
 
-
-.global project_pwm_init
 // Add .extern statements for the necessary functions
 
-.extern __pwm_gpio_to_slice_num
-.extern __pwm_set_clkdiv_int_frac
-.extern __pwm_set_wrap
-.extern __pwm_set_chan_level
-.extern __pwm_set_enabled
+.global project_pwm_init
+
 project_pwm_init:
     push {lr}
 	

@@ -26,14 +26,6 @@ int main() {
 	
 }
 
-#include "hardware/pwm.h"
-
-// Wrapper function for assembly call
-// Wrapper function for assembly call
-void gpio_set_function_wrapper(uint gpio, uint function) {
-    gpio_set_function(gpio, function);
-}
-
 uint pwm_gpio_to_slice_num_wrapper(uint gpio) {
     return pwm_gpio_to_slice_num(gpio);
 }
