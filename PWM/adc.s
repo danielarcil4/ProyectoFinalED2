@@ -14,7 +14,7 @@ adc_init_asm:                      // Function to initialize the ADC
 adc_gpio_init:
         push {lr}
         MOV r1, #31
-        bl gpio_set_function
+        bl gpio_set_function_asm
         bl configurePadControl        
         pop {pc}
 
@@ -69,7 +69,7 @@ configurePadControl:
     LDR R0,=(BASE_PAD_CONTROL+ADC_OFFSET+ATOMIC_CLR)
     LDR R1,=(IE_BITMASK)
     STR R1,[R0]
-
+    //Revisar si es necesario
     LDR R0,=(BASE_PAD_CONTROL+ADC_OFFSET+ATOMIC_SET)
     LDR R1,=(PULLUP_BITMASK)
     STR R1,[R0]

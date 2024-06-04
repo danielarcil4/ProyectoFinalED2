@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "D:/Estudio/OneDrive - Universidad de Antioquia/Estudio/Materias/S6/Digital 2/P_Final/Repo/Repo_Master/ProyectoFinalED2/05-exampleADCPWM-C/05_pwmAdcC"
+    "cmake.sourceDirectory": "D:/Estudio/OneDrive - Universidad de Antioquia/Estudio/Materias/S6/Digital 2/P_Final/Repo/Repo_Master/ProyectoFinalED2/05-exampleADCPWM-C/05_pwmAdcC",
+    "files.associations": {
+        "pwm.h": "c"
+    }
 }

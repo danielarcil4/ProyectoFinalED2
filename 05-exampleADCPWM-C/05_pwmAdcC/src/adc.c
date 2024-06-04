@@ -20,6 +20,7 @@ void project_adc_init() {
     adc_gpio_init(ADC_GPIO_CH1); //Second ADC
     // Select channel for ADC conversion
     adc_select_input(ADC_CH0); //It will begin reading the first channel
+    adc_select_input(ADC_CH1); //It will begin reading the first channel
 
     
     // Select channel for ADC conversion
