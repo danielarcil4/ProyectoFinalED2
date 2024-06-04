@@ -30,7 +30,7 @@ void project_pwm_init(uint PWM_GPIO_CHXX,uint PWM_CHXX) {
 void project_pwm_set_chan_level(uint value, uint PWM_GPIO_CHXX) {
     // Determine the PWM slice connected to GPIO: PWM_GPIO_CHA
     uint sliceNum = pwm_gpio_to_slice_num(PWM_GPIO_CHXX);
-    //NOTA: En realidad los slices los configuro IGUALES
+    //NOTA!!: En realidad los slices los configuro IGUALES
 
     // Determine the PWM slice connected to GPIO: PWM_GPIO_CHB
     //uint sliceNum_2 = pwm_gpio_to_slice_num(PWM_GPIO_CHB);
@@ -39,5 +39,5 @@ void project_pwm_set_chan_level(uint value, uint PWM_GPIO_CHXX) {
     pwm_set_chan_level(sliceNum, PWM_CHA, value); 
     pwm_set_chan_level(sliceNum, PWM_CHB, value);
 
-    printf("*** PWM channel: %d ***\n", pwm_get_counter(sliceNum));
+    printf("*** PWM channel: %d ", pwm_get_counter(sliceNum));
 }

@@ -53,4 +53,4 @@ uart_printValueAdc_asm:
     push    {lr}
     ldr R0, =uart_text_ADCstatus        // Prepare argument no. 1 with full text
     bl  __wrap_printf                   // Call printf wrapper function
-    pop {pc} 
+    pop {pc}

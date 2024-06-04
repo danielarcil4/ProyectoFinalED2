@@ -9,7 +9,7 @@
 .equ DELAY, 0x1523A96
 .equ    GPIO_FUNC_PWM, 4
 .equ    ADC_GPIO_CH0, 26
-.equ    ADC_GPIO_CH1, 27
+//.equ    ADC_GPIO_CH1, 27
 mainasm:
     /* ADC Initialize */
     bl      adc_init_asm

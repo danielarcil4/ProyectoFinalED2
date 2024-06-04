@@ -19,7 +19,7 @@ add_executable(pwmAdcC
 )
 
 # Header folder
-include_directories(include)
+include_directories(pico_sdk_import.cmake include)
 
 # pico_stdlib library. You can add more if they are needed
 target_link_libraries(pwmAdcC pico_stdlib hardware_adc hardware_pwm)
