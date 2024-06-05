@@ -54,3 +54,16 @@ uart_printValueAdc_asm:
     ldr R0, =uart_text_ADCstatus        // Prepare argument no. 1 with full text
     bl  __wrap_printf                   // Call printf wrapper function
     pop {pc} 
+/*
+*Parameters:
+*  
+*  R1: ADC_value
+*/
+.global uart_printValuePWM_asm
+uart_text_PWMstatus:  .string "PWM value is %d"
+.align 2
+uart_printValuePWM_asm:
+    push    {lr}
+    ldr R0, =uart_text_PWMstatus        // Prepare argument no. 1 with full text
+    bl  __wrap_printf                   // Call printf wrapper function
+    pop {pc} 

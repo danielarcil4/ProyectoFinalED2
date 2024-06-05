@@ -4,7 +4,7 @@
 .equ    ATOMIC_CLR, 0x3000
 
 .global adc_init_asm                   // To allow this function to be called from another file
-adc_init_asm:
+adc_init_asm:                      // Function to initialize the ADC
         push {lr}
         bl releaseResetAdc
         bl EnableAdc        
@@ -14,9 +14,10 @@ adc_init_asm:
 adc_gpio_init:
         push {lr}
         MOV r1, #31
-        bl gpio_set_function
+        bl gpio_set_function_asm
         bl configurePadControl        
         pop {pc}
+
 
 .equ    RESETS_BASE, 0x4000c000         // See RP2040 datasheet: 2.14.3 (Subsystem Resets)
 .equ    RESET_DONE_OFFSET, 8
@@ -42,16 +43,20 @@ rstAdcdone:
 .equ    AINSEL_BITMASK,  4096  //Activar AINSEL adc (bit 12)
 .equ    ENABLE_BITMASK,  1 //Activar adc
 EnableAdc:
-    LDR R0, =(BASE_ADC + ATOMIC_SET)
-    LDR R1, =AINSEL_BITMASK
-    STR R1, [R0]    //Habilita MUX para lectura de multiples entradas
 
-    LDR R0, =(BASE_ADC + ATOMIC_SET)
+    LDR R0, =(BASE_ADC)
     LDR R1, =ENABLE_BITMASK
     STR R1, [R0] //Habilita Enable de ADC
     bx lr
 
-
+.global adc_set_input_asm
+adc_set_input_asm:
+    push {lr}
+    ldr r0, =(BASE_ADC + ATOMIC_SET)
+    ldr r1, =AINSEL_BITMASK
+    str r1, [r0]
+    pop {pc}
+        
 /**
  * @brief configurePadControl.
  *
@@ -69,7 +74,7 @@ configurePadControl:
     LDR R0,=(BASE_PAD_CONTROL+ADC_OFFSET+ATOMIC_CLR)
     LDR R1,=(IE_BITMASK)
     STR R1,[R0]
-
+    //Revisar si es necesario
     LDR R0,=(BASE_PAD_CONTROL+ADC_OFFSET+ATOMIC_SET)
     LDR R1,=(PULLUP_BITMASK)
     STR R1,[R0]
