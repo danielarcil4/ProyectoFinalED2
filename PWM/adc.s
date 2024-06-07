@@ -39,13 +39,8 @@ rstAdcdone:
  */
 //.global EnableAdc => Poner global si se llama desde afuera
 .equ    BASE_ADC, 0x4004c000
-.equ    AINSEL_BITMASK,  4096  //Activar AINSEL adc (bit 12)
 .equ    ENABLE_BITMASK,  1 //Activar adc
 EnableAdc:
-    LDR R0, =(BASE_ADC + ATOMIC_SET)
-    LDR R1, =AINSEL_BITMASK
-    STR R1, [R0]    //Habilita MUX para lectura de multiples entradas
-
     LDR R0, =(BASE_ADC + ATOMIC_SET)
     LDR R1, =ENABLE_BITMASK
     STR R1, [R0] //Habilita Enable de ADC
@@ -86,10 +81,12 @@ configurePadControl:
 .equ    ADC_DATARESULT_OFFSET, 4
 .equ    ONE_SHOT_BITMASK,  4 //activar adc
 requestDataAdc:
-    LDR R0,=(BASE_ADC+ATOMIC_SET)
-    LDR R1,=ONE_SHOT_BITMASK
-    STR R1,[R0]
-
+    PUSH {R0}
+    LDR R1,=(BASE_ADC+ATOMIC_SET)
+    LDR R2,=ONE_SHOT_BITMASK
+    STR R0,[R1]    //Habilita MUX para lectura de multiples entradas
+    STR R2,[R1]     //Hacemos el one shot
+    
     LDR R0,=(BASE_ADC)
     DATAISREADY:
         LDR R1, [R0]   
@@ -98,7 +95,11 @@ requestDataAdc:
         beq DATAISREADY
     TAKEDATA:
         LDR R1, [R0,#ADC_DATARESULT_OFFSET]    // Read DATA READY
+        POP {R0}
+        LDR R2,=(BASE_ADC+ATOMIC_CLR)
+        STR R0,[R2]    //Deshabilitar MUX para lectura de multiples entradas
         bx lr
+
 
 .global configClk
 .equ BASE_ADC, 0x4004c000
@@ -110,3 +111,26 @@ configClk:
     LSL R1,R1,#8
     STR R1,[R0]
     bx lr
+/**
+ * @brief CompareVal.
+ *
+ * Compara valores de fotorresistencia. Lleva a 0 en un nivel
+ * Parameters:
+ *  R0: valueAdc
+ */
+.global CompareVal
+.equ    MIN_VALUE_ADC,  2000
+
+CompareVal:
+    PUSH {LR}
+    LDR R0, =MIN_VALUE_ADC
+    AND R0, R1, R0
+    blt Resetear
+    POP {lr}
+
+Resetear:
+    MOV R1, #0
+    POP {PC}
+
+
+

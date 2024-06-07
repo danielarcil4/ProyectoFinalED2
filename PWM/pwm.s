@@ -1,4 +1,3 @@
-.equ    PWM_GPIO_CHA,        16
 .equ    GPIO_FUNC_PWM,       4
 .equ    PWM_CHA,             0
 .equ    PWM_DIV_INTEGER,     128
@@ -11,14 +10,11 @@
 .global project_pwm_init
 
 project_pwm_init:
-    push {lr}
-	
-    MOV R0, #PWM_GPIO_CHA
+    push {R0,lr}
     MOV R1, #GPIO_FUNC_PWM
-	push {R0}
     bl  gpio_set_function_asm // Initialize function PWM for GPIO: PWM_GPIO_CHA
-	
 	pop {R0}
+	
     bl  pwm_gpio_to_slice_num_wrapper // Determine the PWM slice connected to GPIO: PWM_GPIO_CHA
 	//R0 = sliceNum. Se debe garantizar que no se pierda
     mov R1, #PWM_DIV_INTEGER
@@ -54,9 +50,8 @@ project_pwm_init:
  *  R0: value
  */
  project_pwm_set_chan_level:
- 	PUSH {r0, LR}
+ 	PUSH {R1,LR}
 	
-	MOV r0, #PWM_GPIO_CHA
  	bl pwm_gpio_to_slice_num_wrapper
 	//sliceNum = r0
 	MOV R1, #PWM_CHA
