@@ -1,6 +1,6 @@
 .equ    GPIO_FUNC_PWM,       4
 .equ    PWM_CHA,             0
-.equ    PWM_DIV_INTEGER,     128
+.equ    PWM_DIV_INTEGER,     30	
 .equ    PWM_DIV_FRAC,        0
 .equ    PWM_TOP_VALUE,       4095
 .equ    PWM_DUTY_ZERO,       0

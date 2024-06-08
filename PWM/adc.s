@@ -67,7 +67,6 @@ configurePadControl:
     //Revisar si es necesario
     LDR R0,=(BASE_PAD_CONTROL+ADC_OFFSET+ATOMIC_SET)
     LDR R1,=(PULLUP_BITMASK)
-    STR R1,[R0]
     bx lr
 
 
@@ -119,18 +118,27 @@ configClk:
  *  R0: valueAdc
  */
 .global CompareVal
-.equ    MIN_VALUE_ADC,  2000
+.equ    MIN_VALUE_ADC,  200
+.equ    MAX_VALUE_ADC,  4095
 
 CompareVal:
-    PUSH {LR}
     LDR R0, =MIN_VALUE_ADC
-    AND R0, R1, R0
-    blt Resetear
-    POP {lr}
-
-Resetear:
+    CMP R1, R0
+    bgt NotZero
     MOV R1, #0
-    POP {PC}
+    bx lr
+    NotZero:
+        LSL R1, R1, #2
+        LDR R0, =MAX_VALUE_ADC
+        CMP R1, R0
+        blt END
+        ToMax:
+            MOV R1, R0
+        END:
+            bx lr
+
+
+
 
 
 
