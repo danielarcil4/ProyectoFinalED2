@@ -67,6 +67,7 @@ configurePadControl:
     //Revisar si es necesario
     LDR R0,=(BASE_PAD_CONTROL+ADC_OFFSET+ATOMIC_SET)
     LDR R1,=(PULLUP_BITMASK)
+    STR R1,[R0]
     bx lr
 
 

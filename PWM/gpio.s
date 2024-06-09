@@ -60,7 +60,8 @@ gpio_set_function_asm:
 	ldr r2, =(IO_BANK0_BASE+GPIO0_CTRL_OFFSET)  // Address for GPIO0_CTRL register
 	//mov r1, #GPIO_SIO_FUNCTION          // Select SIO for GPIO. See RP2040 datasheet: 2.19.2
     lsl r0, r0, #3                      // Prepare register offset for GPIOx (GPIO_NUM * 8)
-	str r1, [r2, r0]	                // Store selected function (SIO) in GPIOx control register
+	//R1 = 31
+    str r1, [r2, r0]	                // Store selected function (SIO) in GPIOx control register
     bx  lr
 
 /**
